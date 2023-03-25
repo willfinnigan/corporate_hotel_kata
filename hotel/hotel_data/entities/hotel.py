@@ -19,8 +19,9 @@ class Hotel:
         rooms = self.get_rooms_of_type(room_type)
         for room in rooms:
             if room.is_available(check_in, check_out):
-                booking = Booking(employee, room, check_in, check_out)
+                booking = Booking(room, check_in, check_out)
                 room.bookings.append(booking)
+                employee.bookings.append(booking)
                 return booking
 
         raise Exception("No rooms available in desired timeframe")
@@ -35,6 +36,12 @@ class Hotel:
             self.rooms[room_num] = room
             return room
 
+    def get_rooms(self) -> List[Room]:
+        return list(self.rooms.values())
+
+    def get_room_types(self) -> List[str]:
+        return [room.room_type for room in self.get_rooms()]
+
     def get_rooms_of_type(self, room_type) -> List[Room]:
         rooms_of_type = []
         for room in self.rooms.values():
@@ -42,8 +49,12 @@ class Hotel:
                 rooms_of_type.append(room)
         return rooms_of_type
 
+    def number_of_rooms(self) -> int:
+        return len(self.rooms)
+
     def get_all_bookings(self) -> List[Booking]:
         all_bookings = []
         for room in self.rooms.values():
             all_bookings += room.bookings
         return all_bookings
+

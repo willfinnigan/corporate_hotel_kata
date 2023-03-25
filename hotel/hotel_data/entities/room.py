@@ -4,12 +4,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import List
 
-from hotel.employee_data.entities.employee import Employee
-
 
 @dataclass
 class Booking:
-    employee: Employee
     room: Room
     check_in: datetime
     check_out: datetime

@@ -6,8 +6,11 @@ class CompanyService:
         self.employee_data_service = employee_data_service
 
     def add_employee(self, company_id: str, employee_id: str):
-        if self.employee_data_service.does_company_exist(company_id) == False:
+        if self.employee_data_service.get_company(company_id) is None:
             self.employee_data_service.create_company(company_id)
+
+        if self.employee_data_service.get_employee(employee_id) is not None:
+            raise Exception(f'Employee already exists with this id ({employee_id})')
 
         self.employee_data_service.create_employee(employee_id, company_id)
 

@@ -69,9 +69,31 @@ def test_that_employee_can_book_a_room():
     check_out = datetime.strptime('12/19/22', '%m/%d/%y')
     booking = booking_service.book('employee_1', 'hotel_1', 'double', check_in, check_out)
 
-
-
     assert isinstance(booking, Booking)
+
+
+def test_deleted_employee_has_all_bookings_deleted():
+    hotel_data_service = HotelDataService()
+    employee_data_service = EmployeeDataService()
+
+    company_service = CompanyService(employee_data_service)
+    company_service.add_employee('company_1', 'employee_1')
+
+
+    hotel_service = HotelService(hotel_data_service)
+    hotel_service.add_hotel('hotel_1', 'A great hotel')
+    hotel_service.setRoom('hotel_1', 1, 'double')
+
+    booking_service = BookingService(hotel_data_service, employee_data_service)
+    check_in = datetime.strptime('10/19/22', '%m/%d/%y')
+    check_out = datetime.strptime('12/19/22', '%m/%d/%y')
+    booking = booking_service.book('employee_1', 'hotel_1', 'double', check_in, check_out)
+
+    company_service.delete_employee('employee_1')
+
+    hotel = hotel_service.find_hotel_by_id('hotel_1')
+    bookings = hotel.get_all_bookings()
+    assert len(bookings) == 0
 
 
 

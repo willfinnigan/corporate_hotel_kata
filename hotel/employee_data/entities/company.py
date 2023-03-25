@@ -8,4 +8,4 @@ class Company:
     booking_policy: List[str] = field(default_factory=list)
 
     def set_booking_policy(self, booking_policy):
-        self.booking_policy = booking_policy
+        self.booking_policy = list(set(booking_policy))

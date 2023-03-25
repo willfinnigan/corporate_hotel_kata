@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Optional
 
 from hotel.employee_data.entities.employee import Employee
 from hotel.employee_data.entities.company import Company
@@ -9,20 +10,11 @@ class EmployeeDataService:
     companies: dict[str: Company] = field(default_factory=dict)
     employees: dict[str: Employee] = field(default_factory=dict)
 
-    def get_employee(self, employee_id: str) -> Employee:
-        employee = self.employees.get(employee_id)
-        if employee is None:
-            raise Exception(f'Employee does not exist (id={employee_id}')
-        return employee
+    def get_employee(self, employee_id: str) -> Optional[Employee]:
+        return self.employees.get(employee_id)
 
     def get_company(self, company_id: str) -> Company:
-        company = self.companies.get(company_id)
-        if company is None:
-            raise Exception(f'Company does not exist (id={company_id}')
-        return company
-
-    def does_company_exist(self, company_id: str) -> bool:
-        return company_id in self.companies
+        return self.companies.get(company_id)
 
     def create_employee(self, employee_id: str, company_id: str) -> Employee:
         if company_id not in self.companies:
@@ -40,4 +32,9 @@ class EmployeeDataService:
         return new_company
 
     def delete_employee(self, employee_id: str):
+        employee = self.get_employee(employee_id)
+        for i, booking in enumerate(employee.bookings):
+            room = booking.room
+            room.bookings.remove(booking)
         self.employees.pop(employee_id)
+
